@@ -9,7 +9,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- html2pdf.js CDN for reliable PDF export -->
+  <!-- html2pdf.js CDN for PDF export -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <script>
@@ -78,7 +78,12 @@
           </div>
           <div>
             <h1 class="font-extrabold text-base md:text-lg tracking-tight text-white leading-snug">SDN CIPINANG MELAYU 03 PAGI</h1>
-            <p class="text-xs text-blue-200 font-medium tracking-wide">Portal Pelayanan Legalisir Ijazah & Dokumen Kelulusan</p>
+            <p class="text-xs text-blue-200 font-medium tracking-wide flex items-center gap-2">
+              <span>Portal Pelayanan Legalisir Dokumen</span>
+              <span id="badgeCloudSyncNav" class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30 flex items-center gap-1">
+                <i class="fa-solid fa-database text-[8px]"></i> Local Storage
+              </span>
+            </p>
           </div>
         </div>
 
@@ -146,7 +151,7 @@
             
             <!-- Nama Lengkap -->
             <div class="space-y-1.5">
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-700">Nama Lengkap Ajuan <span class="text-rose-500">*</span></label>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-700">Nama Lengkap Alumni <span class="text-rose-500">*</span></label>
               <div class="relative">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
                   <i class="fa-solid fa-user text-xs"></i>
@@ -157,7 +162,7 @@
 
             <!-- NISN -->
             <div class="space-y-1.5">
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-700">NISN Ajuan <span class="text-rose-500">*</span></label>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-700">NISN Alumni <span class="text-rose-500">*</span></label>
               <div class="relative">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
                   <i class="fa-solid fa-id-card text-xs"></i>
@@ -168,7 +173,7 @@
 
             <!-- Tahun Lulus -->
             <div class="space-y-1.5">
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-700">Tahun Lulus/ Tahun Ajaran <span class="text-rose-500">*</span></label>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-700">Tahun Lulus <span class="text-rose-500">*</span></label>
               <div class="relative">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
                   <i class="fa-solid fa-calendar-days text-xs"></i>
@@ -230,9 +235,9 @@
 
           <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
             <p class="text-xs text-slate-500 flex items-center gap-1.5">
-              <i class="fa-solid fa-shield-halved text-brand-600"></i> Permohonan akan otomatis diteruskan ke sistem Tata Usaha sekolah.
+              <i class="fa-solid fa-shield-halved text-brand-600"></i> Permohonan akan otomatis dikirim ke Sistem Server Sekolah.
             </p>
-            <button type="submit" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-brand-600 to-blue-700 hover:from-brand-700 hover:to-blue-800 text-white text-xs font-bold rounded-2xl shadow-lg hover:shadow-brand-500/25 transition duration-200 flex items-center justify-center gap-2">
+            <button type="submit" id="btnSubmitForm" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-brand-600 to-blue-700 hover:from-brand-700 hover:to-blue-800 text-white text-xs font-bold rounded-2xl shadow-lg hover:shadow-brand-500/25 transition duration-200 flex items-center justify-center gap-2">
               <i class="fa-solid fa-paper-plane"></i> Kirim Pengajuan Legalisir
             </button>
           </div>
@@ -256,7 +261,7 @@
               <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
                 <i class="fa-solid fa-barcode text-xs"></i>
               </span>
-              <input type="text" id="inputKodeTracking" uppercase class="w-full uppercase font-mono tracking-wider pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-2xl text-xs font-bold focus:ring-2 focus:ring-brand-500 focus:bg-white focus:outline-none" placeholder="Contoh: LEG-1001">
+              <input type="text" id="inputKodeTracking" class="w-full uppercase font-mono tracking-wider pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-2xl text-xs font-bold focus:ring-2 focus:ring-brand-500 focus:bg-white focus:outline-none" placeholder="Contoh: LEG-1001">
             </div>
             <button onclick="prosesCekTracking()" class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs rounded-2xl shadow transition flex items-center gap-2">
               <i class="fa-solid fa-search"></i> Cari
@@ -279,12 +284,17 @@
         <div>
           <div class="flex items-center gap-2">
             <h2 class="text-xl font-extrabold text-slate-800">Panel Operator & Tata Usaha</h2>
-            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-700">Aktif</span>
+            <span id="badgeCloudSync" class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-700 flex items-center gap-1">
+              <i class="fa-solid fa-cloud"></i> Google Sheets Sync
+            </span>
           </div>
           <p class="text-xs text-slate-500 mt-1">Kelola data permohonan legalisir alumni SDN Cipinang Melayu 03 Pagi</p>
         </div>
 
         <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+          <button onclick="syncDataWithCloud()" title="Sinkronkan data dari Google Sheets" class="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition flex items-center gap-2">
+            <i class="fa-solid fa-rotate text-brand-600"></i> Refresh
+          </button>
           <button onclick="bukaModalPengaturanSekolah()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition flex items-center gap-2">
             <i class="fa-solid fa-sliders text-brand-600"></i> Pengaturan Sekolah
           </button>
@@ -498,7 +508,7 @@
       </div>
       <div>
         <h3 class="font-bold text-slate-800 text-base">Hapus Data Pengajuan?</h3>
-        <p class="text-xs text-slate-500 mt-1">Data dengan kode <strong id="hapusKodeText" class="font-mono text-slate-700"></strong> akan dihapus secara permanen.</p>
+        <p class="text-xs text-slate-500 mt-1">Data dengan kode <strong id="hapusKodeText" class="font-mono text-slate-700"></strong> akan dihapus dari sistem.</p>
       </div>
       <div class="flex justify-center gap-2 pt-2 border-t">
         <button onclick="closeModalHapus()" class="px-4 py-2 border border-slate-300 rounded-xl text-slate-600 text-xs font-semibold hover:bg-slate-50">Batal</button>
@@ -507,7 +517,7 @@
     </div>
   </div>
 
-  <!-- MODAL PENGATURAN SEKOLAH & KEPALA SEKOLAH -->
+  <!-- MODAL PENGATURAN SEKOLAH & GOOGLE SHEETS -->
   <div id="modalPengaturanSekolah" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50 no-print animate-fade-in">
     <div class="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 space-y-5 shadow-2xl border border-slate-100">
       <div class="flex justify-between items-center border-b pb-4">
@@ -516,14 +526,23 @@
             <i class="fa-solid fa-school text-base"></i>
           </div>
           <div>
-            <h3 class="font-extrabold text-slate-800 text-base">Pengaturan Data Sekolah</h3>
-            <p class="text-[11px] text-slate-500">Atur profil & tanda tangan dokumen laporan</p>
+            <h3 class="font-extrabold text-slate-800 text-base">Pengaturan Data Sekolah & Cloud</h3>
+            <p class="text-[11px] text-slate-500">Atur profil sekolah & integrasi Google Sheets</p>
           </div>
         </div>
         <button onclick="closeModalPengaturanSekolah()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
       </div>
 
       <form onsubmit="simpanPengaturanSekolah(event)" class="space-y-4">
+        <!-- Integrasi Google Sheets -->
+        <div class="bg-blue-50/70 p-3.5 rounded-2xl border border-blue-200 space-y-1.5">
+          <label class="block text-xs font-bold uppercase tracking-wider text-brand-900 flex items-center gap-1.5">
+            <i class="fa-solid fa-cloud text-brand-600"></i> URL Google Apps Script (Cloud Sync)
+          </label>
+          <input type="text" id="cfgScriptUrl" class="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs font-mono focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="https://script.google.com/macros/s/.../exec">
+          <p class="text-[10px] text-slate-500">Isi URL Web App Google Apps Script agar data tersimpan otomatis di Google Sheets sekolah.</p>
+        </div>
+
         <div>
           <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Nama Kepala Sekolah</label>
           <input type="text" id="cfgNamaKepsek" required class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-brand-500 focus:outline-none">
@@ -645,7 +664,8 @@
       namaKepsek: 'Hj. Ratna Pertiwi, M.Pd.',
       nipKepsek: '19750812 199903 2 001',
       namaTU: 'Bambang Sudrajat',
-      nipTU: '19820415 200801 1 004'
+      nipTU: '19820415 200801 1 004',
+      scriptUrl: ''
     };
 
     let isOperatorLoggedIn = false;
@@ -661,6 +681,66 @@
     function saveStorage() {
       localStorage.setItem('dataLegalisirSDN03', JSON.stringify(dataLegalisir));
       localStorage.setItem('sekolahConfigSDN03', JSON.stringify(sekolahConfig));
+      updateSyncStatusUI();
+    }
+
+    function updateSyncStatusUI() {
+      const badgeNav = document.getElementById('badgeCloudSyncNav');
+      const badgeOp = document.getElementById('badgeCloudSync');
+
+      if (sekolahConfig.scriptUrl && sekolahConfig.scriptUrl.trim() !== '') {
+        if (badgeNav) badgeNav.innerHTML = `<i class="fa-solid fa-cloud text-[8px]"></i> Google Cloud Active`;
+        if (badgeNav) badgeNav.className = `px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-400/20 text-emerald-300 border border-emerald-400/30 flex items-center gap-1`;
+        if (badgeOp) badgeOp.innerHTML = `<i class="fa-solid fa-cloud"></i> Google Sheets Connected`;
+        if (badgeOp) badgeOp.className = `px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-700 flex items-center gap-1`;
+      } else {
+        if (badgeNav) badgeNav.innerHTML = `<i class="fa-solid fa-database text-[8px]"></i> Local Storage Mode`;
+        if (badgeNav) badgeNav.className = `px-2 py-0.5 rounded-full text-[9px] font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30 flex items-center gap-1`;
+        if (badgeOp) badgeOp.innerHTML = `<i class="fa-solid fa-database"></i> Local Storage (Klik Pengaturan untuk Cloud)`;
+        if (badgeOp) badgeOp.className = `px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-800 flex items-center gap-1`;
+      }
+    }
+
+    /* GOOGLE SHEETS API SYNC HANDLERS */
+    async function syncDataWithCloud() {
+      if (!sekolahConfig.scriptUrl || sekolahConfig.scriptUrl.trim() === '') {
+        renderOperatorView();
+        return;
+      }
+
+      showToast('Menghubungkan ke Google Sheets...', 'success');
+
+      try {
+        const response = await fetch(sekolahConfig.scriptUrl);
+        const cloudData = await response.json();
+
+        if (Array.isArray(cloudData) && cloudData.length > 0) {
+          dataLegalisir = cloudData;
+          localStorage.setItem('dataLegalisirSDN03', JSON.stringify(dataLegalisir));
+          showToast('Data berhasil diperbarui dari Cloud Google Sheets!');
+        }
+      } catch (err) {
+        console.error('Error fetching Cloud Data:', err);
+        showToast('Gagal terhubung ke Cloud. Menampilkan data lokal.', 'error');
+      }
+
+      renderOperatorView();
+    }
+
+    async function pushToCloud(action, payload) {
+      if (!sekolahConfig.scriptUrl || sekolahConfig.scriptUrl.trim() === '') return;
+
+      try {
+        await fetch(sekolahConfig.scriptUrl, {
+          method: 'POST',
+          mode: 'no-cors', // Avoid CORS issues with Apps Script Web App
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: action, ...payload })
+        });
+        console.log(`Cloud sync '${action}' sent successfully.`);
+      } catch (err) {
+        console.error('Failed to sync action to cloud:', err);
+      }
     }
 
     /* POP-UP PRINT REVIEW HANDLERS */
@@ -668,11 +748,9 @@
       currentPrintFilename = filename;
       currentPrintOrientation = orientation;
 
-      // Render to visible paper container in modal
       const paperContainer = document.getElementById('modalPreviewDocumentPaper');
       paperContainer.innerHTML = htmlContent;
 
-      // Sync with print container for native print dialog
       const areaCetak = document.getElementById('areaCetakDoc');
       areaCetak.innerHTML = htmlContent;
 
@@ -739,7 +817,7 @@
         }
         document.getElementById('section-operator').classList.remove('hidden');
         btnOperator.className = 'px-5 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 bg-white text-brand-900 shadow-md flex items-center gap-1.5';
-        renderOperatorView();
+        syncDataWithCloud();
       }
     }
 
@@ -771,9 +849,13 @@
     }
 
     /* PUBLIC SUBMISSION PROCESS */
-    function handleProsesPengajuan(e) {
+    async function handleProsesPengajuan(e) {
       e.preventDefault();
       
+      const submitBtn = document.getElementById('btnSubmitForm');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Mengirim Pengajuan...`;
+
       const kodeUnik = 'LEG-' + Math.floor(1000 + Math.random() * 9000);
       const today = new Date().toISOString().split('T')[0];
 
@@ -794,10 +876,16 @@
       dataLegalisir.unshift(baruda);
       saveStorage();
 
+      // Push payload to Cloud Google Sheets
+      await pushToCloud('create', baruda);
+
       currentBuktiData = baruda;
       tampilkanModalBukti(baruda);
       document.getElementById('formPengajuan').reset();
       showToast('Permohonan legalisir berhasil dikirim!');
+
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Kirim Pengajuan Legalisir`;
     }
 
     function tampilkanModalBukti(item) {
@@ -889,7 +977,7 @@
     }
 
     /* PUBLIC TRACKING PROCESS */
-    function prosesCekTracking() {
+    async function prosesCekTracking() {
       const kodeInput = document.getElementById('inputKodeTracking').value.trim().toUpperCase();
       const container = document.getElementById('hasilTrackingArea');
 
@@ -898,7 +986,16 @@
         return;
       }
 
-      const found = dataLegalisir.find(d => d.kode === kodeInput);
+      // Sync data first if URL is available
+      if (sekolahConfig.scriptUrl) {
+        try {
+          const response = await fetch(sekolahConfig.scriptUrl);
+          const cloudData = await response.json();
+          if (Array.isArray(cloudData)) dataLegalisir = cloudData;
+        } catch(e){}
+      }
+
+      const found = dataLegalisir.find(d => String(d.kode).toUpperCase() === kodeInput);
 
       if (!found) {
         container.innerHTML = `
@@ -1062,19 +1159,21 @@
       }
     }
 
-    function updateStatusAndNote(kode, newStatus) {
-      const idx = dataLegalisir.findIndex(d => d.kode === kode);
+    async function updateStatusAndNote(kode, newStatus) {
+      const idx = dataLegalisir.findIndex(d => String(d.kode) === String(kode));
       if (idx !== -1) {
         dataLegalisir[idx].status = newStatus;
         saveStorage();
         showToast(`Status ${kode} diubah ke "${newStatus}"`);
         renderOperatorView();
+
+        await pushToCloud('update', { kode: kode, status: newStatus });
       }
     }
 
     function editCatatanPetugas(kode) {
       editingKode = kode;
-      const item = dataLegalisir.find(d => d.kode === kode);
+      const item = dataLegalisir.find(d => String(d.kode) === String(kode));
       if (item) {
         document.getElementById('editCatatanInput').value = item.catatan || '';
         const modal = document.getElementById('modalEditCatatan');
@@ -1090,15 +1189,18 @@
       editingKode = null;
     }
 
-    function simpanCatatanPetugas() {
+    async function simpanCatatanPetugas() {
       if (!editingKode) return;
-      const idx = dataLegalisir.findIndex(d => d.kode === editingKode);
+      const idx = dataLegalisir.findIndex(d => String(d.kode) === String(editingKode));
       if (idx !== -1) {
-        dataLegalisir[idx].catatan = document.getElementById('editCatatanInput').value.trim();
+        const txtCatatan = document.getElementById('editCatatanInput').value.trim();
+        dataLegalisir[idx].catatan = txtCatatan;
         saveStorage();
         showToast('Catatan petugas berhasil diperbarui');
         closeModalCatatan();
         renderOperatorView();
+
+        await pushToCloud('update', { kode: editingKode, catatan: txtCatatan });
       }
     }
 
@@ -1118,9 +1220,9 @@
       kodeToDelete = null;
     }
 
-    function konfirmasiHapusData() {
+    async function konfirmasiHapusData() {
       if (!kodeToDelete) return;
-      const idx = dataLegalisir.findIndex(d => d.kode === kodeToDelete);
+      const idx = dataLegalisir.findIndex(d => String(d.kode) === String(kodeToDelete));
       if (idx !== -1) {
         const delKode = kodeToDelete;
         dataLegalisir.splice(idx, 1);
@@ -1129,6 +1231,8 @@
         closeModalHapus();
         filterTabelOperator();
         updateOperatorCounts();
+
+        await pushToCloud('delete', { kode: delKode });
       }
     }
 
@@ -1136,8 +1240,8 @@
       const query = document.getElementById('searchOperator').value.toLowerCase();
       const filtered = dataLegalisir.filter(item => 
         item.nama.toLowerCase().includes(query) ||
-        item.kode.toLowerCase().includes(query) ||
-        item.nisn.toLowerCase().includes(query) ||
+        String(item.kode).toLowerCase().includes(query) ||
+        String(item.nisn).toLowerCase().includes(query) ||
         item.jenisDokumen.toLowerCase().includes(query)
       );
       renderTabelOperator(filtered);
@@ -1149,6 +1253,7 @@
       document.getElementById('cfgNipKepsek').value = sekolahConfig.nipKepsek;
       document.getElementById('cfgNamaTU').value = sekolahConfig.namaTU;
       document.getElementById('cfgNipTU').value = sekolahConfig.nipTU || '';
+      document.getElementById('cfgScriptUrl').value = sekolahConfig.scriptUrl || '';
 
       const modal = document.getElementById('modalPengaturanSekolah');
       modal.classList.remove('hidden');
@@ -1167,10 +1272,12 @@
       sekolahConfig.nipKepsek = document.getElementById('cfgNipKepsek').value.trim();
       sekolahConfig.namaTU = document.getElementById('cfgNamaTU').value.trim();
       sekolahConfig.nipTU = document.getElementById('cfgNipTU').value.trim();
+      sekolahConfig.scriptUrl = document.getElementById('cfgScriptUrl').value.trim();
 
       saveStorage();
       showToast('Pengaturan data sekolah berhasil disimpan!');
       closeModalPengaturanSekolah();
+      syncDataWithCloud();
     }
 
     /* OPERATOR PDF REPORT GENERATION */
@@ -1240,7 +1347,7 @@
 
     /* DETAIL PENGAJUAN OPERATOR HANDLERS */
     function lihatDetailPengajuan(kode) {
-      const item = dataLegalisir.find(d => d.kode === kode);
+      const item = dataLegalisir.find(d => String(d.kode) === String(kode));
       if (!item) return;
 
       detailSelectedData = item;
@@ -1297,7 +1404,8 @@
 
     /* APP INITIALIZATION */
     window.onload = function() {
-      renderOperatorView();
+      updateSyncStatusUI();
+      syncDataWithCloud();
     };
   </script>
 </body>
