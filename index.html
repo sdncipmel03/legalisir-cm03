@@ -81,7 +81,7 @@
             <p class="text-xs text-blue-200 font-medium tracking-wide flex items-center gap-2">
               <span>Portal Pelayanan Legalisir Dokumen</span>
               <span id="badgeCloudSyncNav" class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30 flex items-center gap-1">
-                <i class="fa-solid fa-database text-[8px]"></i> Local Storage
+                <i class="fa-solid fa-database text-[8px]"></i> Connecting...
               </span>
             </p>
           </div>
@@ -151,7 +151,7 @@
             
             <!-- Nama Lengkap -->
             <div class="space-y-1.5">
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-700">Nama Lengkap Ajuan <span class="text-rose-500">*</span></label>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-700">Nama Lengkap Alumni <span class="text-rose-500">*</span></label>
               <div class="relative">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
                   <i class="fa-solid fa-user text-xs"></i>
@@ -162,7 +162,7 @@
 
             <!-- NISN -->
             <div class="space-y-1.5">
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-700">NISN Ajuan <span class="text-rose-500">*</span></label>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-700">NISN Alumni <span class="text-rose-500">*</span></label>
               <div class="relative">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
                   <i class="fa-solid fa-id-card text-xs"></i>
@@ -173,7 +173,7 @@
 
             <!-- Tahun Lulus -->
             <div class="space-y-1.5">
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-700">Tahun Lulus/ Tahun Ajaran <span class="text-rose-500">*</span></label>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-700">Tahun Lulus <span class="text-rose-500">*</span></label>
               <div class="relative">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
                   <i class="fa-solid fa-calendar-days text-xs"></i>
@@ -235,7 +235,7 @@
 
           <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
             <p class="text-xs text-slate-500 flex items-center gap-1.5">
-              <i class="fa-solid fa-shield-halved text-brand-600"></i> Permohonan akan otomatis dikirim ke Sistem Server Sekolah.
+              <i class="fa-solid fa-shield-halved text-brand-600"></i> Permohonan akan otomatis dikirim ke Server Sekolah.
             </p>
             <button type="submit" id="btnSubmitForm" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-brand-600 to-blue-700 hover:from-brand-700 hover:to-blue-800 text-white text-xs font-bold rounded-2xl shadow-lg hover:shadow-brand-500/25 transition duration-200 flex items-center justify-center gap-2">
               <i class="fa-solid fa-paper-plane"></i> Kirim Pengajuan Legalisir
@@ -540,7 +540,7 @@
             <i class="fa-solid fa-cloud text-brand-600"></i> URL Google Apps Script (Cloud Sync)
           </label>
           <input type="text" id="cfgScriptUrl" class="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs font-mono focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="https://script.google.com/macros/s/.../exec">
-          <p class="text-[10px] text-slate-500">Isi URL Web App Google Apps Script agar data tersimpan otomatis di Google Sheets sekolah.</p>
+          <p class="text-[10px] text-slate-500">URL Web App Google Script utama di hardcode di variabel <code>DEFAULT_SCRIPT_URL</code>. Kolom ini untuk penyesuaian opsional.</p>
         </div>
 
         <div>
@@ -628,6 +628,28 @@
   </footer>
 
   <script>
+    /* 
+      =========================================================================
+      KONFIGURASI UTAMA SINKRONISASI GOOGLE SHEETS CLOUD
+      =========================================================================
+      Tempelkan URL Web App Google Apps Script milik sekolah Anda di bawah ini.
+      Seluruh perangkat/browser yang membuka website ini akan OTOMATIS 
+      terhubung ke Google Sheets yang sama tanpa perlu input manual lagi!
+    */
+    const DEFAULT_SCRIPT_URL = "Dhttps://script.google.com/macros/s/AKfycbwXXKrPAOp0qEdrU6HMEbor31Hkqw2bJF4kMaVpJh_XF5mmu2OxesyOH4bITMLpSqoaaA/exec";
+
+    function getActiveScriptUrl() {
+      if (sekolahConfig && sekolahConfig.scriptUrl && sekolahConfig.scriptUrl.trim() !== '') {
+        return sekolahConfig.scriptUrl.trim();
+      }
+      return DEFAULT_SCRIPT_URL.trim();
+    }
+
+    function isScriptUrlValid() {
+      const url = getActiveScriptUrl();
+      return url !== '' && url.includes('script.google.com') && !url.includes('CONTOH_ISI_URL');
+    }
+
     /* STORAGE INITIALIZATION */
     let dataLegalisir = JSON.parse(localStorage.getItem('dataLegalisirSDN03')) || [
       {
@@ -688,7 +710,7 @@
       const badgeNav = document.getElementById('badgeCloudSyncNav');
       const badgeOp = document.getElementById('badgeCloudSync');
 
-      if (sekolahConfig.scriptUrl && sekolahConfig.scriptUrl.trim() !== '') {
+      if (isScriptUrlValid()) {
         if (badgeNav) badgeNav.innerHTML = `<i class="fa-solid fa-cloud text-[8px]"></i> Google Cloud Active`;
         if (badgeNav) badgeNav.className = `px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-400/20 text-emerald-300 border border-emerald-400/30 flex items-center gap-1`;
         if (badgeOp) badgeOp.innerHTML = `<i class="fa-solid fa-cloud"></i> Google Sheets Connected`;
@@ -696,14 +718,14 @@
       } else {
         if (badgeNav) badgeNav.innerHTML = `<i class="fa-solid fa-database text-[8px]"></i> Local Storage Mode`;
         if (badgeNav) badgeNav.className = `px-2 py-0.5 rounded-full text-[9px] font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30 flex items-center gap-1`;
-        if (badgeOp) badgeOp.innerHTML = `<i class="fa-solid fa-database"></i> Local Storage (Klik Pengaturan untuk Cloud)`;
+        if (badgeOp) badgeOp.innerHTML = `<i class="fa-solid fa-database"></i> Local Storage (Atur Google Script URL)`;
         if (badgeOp) badgeOp.className = `px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-800 flex items-center gap-1`;
       }
     }
 
     /* GOOGLE SHEETS API SYNC HANDLERS */
     async function syncDataWithCloud() {
-      if (!sekolahConfig.scriptUrl || sekolahConfig.scriptUrl.trim() === '') {
+      if (!isScriptUrlValid()) {
         renderOperatorView();
         return;
       }
@@ -711,13 +733,13 @@
       showToast('Menghubungkan ke Google Sheets...', 'success');
 
       try {
-        const response = await fetch(sekolahConfig.scriptUrl);
+        const response = await fetch(getActiveScriptUrl());
         const cloudData = await response.json();
 
         if (Array.isArray(cloudData) && cloudData.length > 0) {
           dataLegalisir = cloudData;
           localStorage.setItem('dataLegalisirSDN03', JSON.stringify(dataLegalisir));
-          showToast('Data berhasil diperbarui dari Cloud Google Sheets!');
+          showToast('Data berhasil terhubung & diperbarui dari Cloud!');
         }
       } catch (err) {
         console.error('Error fetching Cloud Data:', err);
@@ -728,10 +750,10 @@
     }
 
     async function pushToCloud(action, payload) {
-      if (!sekolahConfig.scriptUrl || sekolahConfig.scriptUrl.trim() === '') return;
+      if (!isScriptUrlValid()) return;
 
       try {
-        await fetch(sekolahConfig.scriptUrl, {
+        await fetch(getActiveScriptUrl(), {
           method: 'POST',
           mode: 'no-cors', // Avoid CORS issues with Apps Script Web App
           headers: { 'Content-Type': 'application/json' },
@@ -987,9 +1009,9 @@
       }
 
       // Sync data first if URL is available
-      if (sekolahConfig.scriptUrl) {
+      if (isScriptUrlValid()) {
         try {
-          const response = await fetch(sekolahConfig.scriptUrl);
+          const response = await fetch(getActiveScriptUrl());
           const cloudData = await response.json();
           if (Array.isArray(cloudData)) dataLegalisir = cloudData;
         } catch(e){}
